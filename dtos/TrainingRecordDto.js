@@ -1,0 +1,1 @@
+// TrainingRecordDto.js - generated placeholder

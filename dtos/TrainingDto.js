@@ -1,0 +1,1 @@
+// TrainingDto.js - generated placeholder
