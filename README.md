@@ -1,67 +1,113 @@
-# MilitaryManagement Backend
+# ⚓ MilitaryManagement Backend
 
-## 📦 Περιγραφή
-Node.js + Express backend για την εφαρμογή MilitaryManagement. Υποστηρίζει:
+[![Node.js](https://img.shields.io/badge/Node.js-18.x-brightgreen.svg)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-Framework-blue.svg)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green.svg)](https://www.mongodb.com/)
+[![Build](https://img.shields.io/badge/Build-Passing-success.svg)]()
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-- CRUD για στρατιωτικό προσωπικό
-- CRUD για υπηρεσίες και εκπαιδεύσεις
-- JWT Authentication
-- Swagger τεκμηρίωση στο `/api-docs`
-- Upload αρχείων σε προσωπικό
-- MongoDB με σύνδεση Atlas
+Backend REST API για διαχείριση στρατιωτικού προσωπικού, εκπαιδεύσεων, και στατιστικών.
 
 ---
 
-## 🛠️ Εγκατάσταση
+## 📦 Τεχνολογίες
+
+- **Node.js** / **Express.js**
+- **MongoDB Atlas**
+- **Mongoose**
+- **JWT Authentication**
+- **Swagger (API docs)**
+- **Multer (file uploads)**
+
+---
+
+## 🚀 Εκκίνηση τοπικά
+
+### 1️⃣ Κλώνος αποθετηρίου
+
+```bash
+git clone https://github.com/GiorgosPanagopoulos/MilitaryManagement_Backend.git
+cd MilitaryManagement_Backend
+```
+
+### 2️⃣ Εγκατάσταση εξαρτήσεων
 
 ```bash
 npm install
 ```
 
----
-
-## 🚀 Εκκίνηση
+### 3️⃣ Δημιουργία αρχείου `.env`
 
 ```bash
-node server.js
+touch .env
 ```
 
-> Βεβαιώσου ότι έχεις το `.env` με τα εξής:
+Προσθέτεις μέσα:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
 ```
-MONGO_URI=mongodb+srv://george6627:7qKWuXYsSGf39NfC@cluster0.7dre2.mongodb.net/
-JWT_SECRET=supersecretkey
+
+### 4️⃣ Εκκίνηση σε development mode
+
+```bash
+npm run dev
+```
+
+Η εφαρμογή θα τρέχει στο:  
+📍 `http://localhost:5000`
+
+---
+
+## 📂 Δομή Backend
+
+```
+├── controllers/
+├── dtos/
+├── middleware/
+├── models/
+├── repositories/
+├── routes/
+├── services/
+├── files/
+├── swagger.js
+├── index.js
 ```
 
 ---
 
-## 🔁 Endpoints
+## 📡 Swagger UI
 
-- `GET /api/personnel`
-- `POST /api/personnel`
-- `PUT /api/personnel/:id`
-- `DELETE /api/personnel/:id`
-- `POST /api/uploads/personnel/:id` (file upload)
-- `GET /api-docs` (Swagger)
+Μπορείς να δεις και να δοκιμάσεις όλα τα endpoints στο:  
+👉 `http://localhost:5000/api-docs`
 
 ---
 
-## 📂 Δομή
+## 📁 Ανεβάσματα Αρχείων
 
-- `controllers/` - χειριστές API
-- `services/` - λογική εφαρμογής
-- `routes/` - endpoints
-- `models/` - mongoose σχήματα
-- `dtos/` - Data Transfer Objects
-- `uploads/` - αποθηκευμένα αρχεία
+- Υποστήριξη για αρχεία `.pdf`, `.jpg`, `.png`
+- Ανεβαίνουν στον φάκελο: `uploads/`
+- Endpoint: `POST /uploads/personnel/:id`
 
 ---
 
-## 🛡️ CORS
+## 🧪 Τεστ
 
-Ενεργοποιημένο για frontend στο `http://localhost:5173`.
+```bash
+npm run test
+```
 
 ---
 
-## 🧪 Testing
+## 👤 Συντάκτης
 
-Διαθέσιμος φάκελος `tests/` για μονάδες.
+George Panagopoulos  
+📧 george6627@hotmail.com
+🔗 [GitHub](https://github.com/GiorgosPanagopoulos)
+
+---
+## 📜 License
+
+MIT © 2025 Giorgos Panagopoulos
