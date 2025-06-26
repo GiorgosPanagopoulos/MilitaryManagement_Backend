@@ -1,23 +1,28 @@
-const isAdmin = require('../middleware/isAdmin');
+// routes/personnelRoutes.js
 const express = require('express');
 const router = express.Router();
 const {
+  getAllPersonnel,
   getPersonnelById,
-  updatePersonnel,
   createPersonnel,
-  deletePersonnel
+  updatePersonnel,
+  deletePersonnel,
 } = require('../controllers/personnelController');
+const isAdmin = require('../middleware/isAdmin');
 
-// Ανάκτηση προσωπικών δεδομένων στρατιωτικού
+// ✅ Ανάκτηση όλου του προσωπικού
+router.get('/', getAllPersonnel);
+
+// ✅ Ανάκτηση προσωπικού βάσει ID
 router.get('/:id', getPersonnelById);
 
-// Ενημέρωση προσωπικών δεδομένων στρατιωτικού
-router.put('/:id', updatePersonnel);
-
-// Δημιουργία νέου στρατιωτικού προσωπικού
+// ✅ Δημιουργία νέου προσωπικού
 router.post('/', createPersonnel);
 
-// ✅ Διαγραφή στρατιωτικού προσωπικού (μόνο για Admin)
+// ✅ Ενημέρωση προσωπικού βάσει ID
+router.put('/:id', updatePersonnel);
+
+// ✅ Διαγραφή προσωπικού (μόνο για Admin)
 router.delete('/:id', isAdmin, deletePersonnel);
 
 module.exports = router;
