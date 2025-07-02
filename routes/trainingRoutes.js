@@ -1,15 +1,27 @@
-const isAdmin = require('../middleware/isAdmin');
 // routes/trainingRoutes.js
 const express = require('express');
 const router = express.Router();
 
-// Εισαγωγή των controller functions
-const { createTraining, getTrainingRecords } = require('../controllers/trainingController');
+const authMiddleware = require('../middleware/auth.middleware');
+const isAdmin = require('../middleware/isAdmin');
 
-// Δημιουργία νέας εκπαίδευσης
-router.post('/create', createTraining);  // Εξασφαλίστε ότι η 'createTraining' είναι ορισμένη στον controller
+const {
+  createTraining,
+  getTrainingRecords,
+  updateTraining,
+  deleteTraining,
+} = require('../controllers/trainingController');
 
-// Ανάκτηση όλων των εκπαιδευτικών αρχείων
-router.get('/', getTrainingRecords);  // Εξασφαλίστε ότι η 'getTrainingRecords' είναι ορισμένη στον controller
+// ✅ Δημιουργία νέας εκπαίδευσης (μόνο για πιστοποιημένους χρήστες)
+router.post('/', authMiddleware, createTraining);
+
+// ✅ Ανάκτηση όλων των εκπαιδεύσεων (μόνο για πιστοποιημένους χρήστες)
+router.get('/', authMiddleware, getTrainingRecords);
+
+// ✅ Ενημέρωση εκπαίδευσης (μόνο για πιστοποιημένους χρήστες)
+router.put('/:id', authMiddleware, updateTraining);
+
+// ✅ Διαγραφή εκπαίδευσης (μόνο για admin)
+router.delete('/:id', authMiddleware, isAdmin, deleteTraining);
 
 module.exports = router;
