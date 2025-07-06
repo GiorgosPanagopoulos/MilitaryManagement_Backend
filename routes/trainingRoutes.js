@@ -1,4 +1,3 @@
-// routes/trainingRoutes.js
 const express = require('express');
 const router = express.Router();
 
@@ -10,6 +9,7 @@ const {
   getTrainingRecords,
   updateTraining,
   deleteTraining,
+  getAllTrainingsForCalendar, // 🆕
 } = require('../controllers/trainingController');
 
 // ✅ Δημιουργία νέας εκπαίδευσης (μόνο για πιστοποιημένους χρήστες)
@@ -17,6 +17,9 @@ router.post('/', authMiddleware, createTraining);
 
 // ✅ Ανάκτηση όλων των εκπαιδεύσεων (μόνο για πιστοποιημένους χρήστες)
 router.get('/', authMiddleware, getTrainingRecords);
+
+// ✅ Ανάκτηση για ημερολόγιο εκπαιδεύσεων (μόνο για πιστοποιημένους χρήστες)
+router.get('/calendar', authMiddleware, getAllTrainingsForCalendar); // 🆕
 
 // ✅ Ενημέρωση εκπαίδευσης (μόνο για πιστοποιημένους χρήστες)
 router.put('/:id', authMiddleware, updateTraining);

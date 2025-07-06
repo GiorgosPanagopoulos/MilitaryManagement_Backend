@@ -1,89 +1,187 @@
-const Training = require('../models/Training');
-const Personnel = require('../models/Personnel');
-const Service = require('../models/Service');
+const TrainingRecord = require('../../models/TrainingRecord');
+const Personnel = require('../../models/Personnel');
 
-exports.trainingsByUnit = async (req, res) => {
+// 📊 Προσωπικό ανά Μονάδα
+exports.personnelByUnit = async (req, res) => {
   try {
-    const result = await Service.aggregate([
+    const result = await Personnel.aggregate([
       {
-        $lookup: {
-          from: 'personnels',
-          localField: 'personnel',
-          foreignField: '_id',
-          as: 'staff'
-        }
-      },
-      {
-        $unwind: '$staff'
-      },
-      {
-        $lookup: {
-          from: 'trainingrecords',
-          localField: 'staff._id',
-          foreignField: 'personnel',
-          as: 'records'
+        $group: {
+          _id: "$unit",
+          count: { $sum: 1 }
         }
       },
       {
         $project: {
-          name: 1,
-          totalTrainings: { $size: '$records' }
-        }
-      },
-      {
-        $group: {
-          _id: '$name',
-          totalTrainings: { $sum: '$totalTrainings' }
+          _id: 0,
+          name: "$_id",
+          value: "$count"
         }
       }
     ]);
     res.json(result);
   } catch (err) {
-    res.status(500).json({ error: 'Σφάλμα στατιστικών ανά μονάδα' });
+    console.error('personnelByUnit error:', err.message);
+    res.status(500).json({ error: 'Σφάλμα προσωπικού ανά μονάδα' });
   }
 };
 
-exports.successRateByTraining = async (req, res) => {
+// 📊 Προσωπικό ανά Βαθμό
+exports.personnelByRank = async (req, res) => {
   try {
-    const result = await Training.aggregate([
+    const result = await Personnel.aggregate([
+      {
+        $group: {
+          _id: '$rank',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: '$_id',
+          value: '$count'
+        }
+      }
+    ]);
+
+    res.json(result);
+  } catch (err) {
+    console.error('personnelByRank error:', err.message);
+    res.status(500).json({ error: 'Σφάλμα προσωπικού ανά βαθμό' });
+  }
+};
+
+// 📊 Συμμετοχές & Μ.Ο. βαθμολογίας εκπαίδευσης
+exports.trainingParticipation = async (req, res) => {
+  try {
+    const result = await TrainingRecord.aggregate([
+      {
+        $group: {
+          _id: '$description',
+          participants: { $sum: 1 },
+          avgScore: { $avg: '$grade' },
+        },
+      },
+      {
+        $project: {
+          training: '$_id',
+          participants: 1,
+          averageScore: { $round: ['$avgScore', 1] },
+          _id: 0,
+        },
+      },
+    ]);
+
+    res.json(result);
+  } catch (err) {
+    console.error('trainingParticipation error:', err.message);
+    res.status(500).json({ error: 'Σφάλμα στατιστικών εκπαιδεύσεων' });
+  }
+};
+
+// 📈 Εκπαιδεύσεις ανά Μονάδα (μόνο αν υπάρχει `service` στο personnel)
+exports.trainingsByUnit = async (req, res) => {
+  try {
+    const result = await Personnel.aggregate([
       {
         $lookup: {
           from: 'trainingrecords',
           localField: '_id',
-          foreignField: 'training',
-          as: 'records'
-        }
+          foreignField: 'personnel',
+          as: 'records',
+        },
+      },
+      {
+        $group: {
+          _id: '$unit',
+          totalTrainings: { $sum: { $size: '$records' } },
+        },
       },
       {
         $project: {
-          description: 1,
-          total: { $size: '$records' },
+          _id: 0,
+          unit: '$_id',
+          totalTrainings: 1,
+        },
+      },
+    ]);
+
+    res.json(result);
+  } catch (err) {
+    console.error('trainingsByUnit error:', err.message);
+    res.status(500).json({ error: 'Σφάλμα στατιστικών ανά μονάδα' });
+  }
+};
+
+// 📈 Ποσοστά επιτυχίας ανά Εκπαίδευση
+exports.successRateByTraining = async (req, res) => {
+  try {
+    const result = await TrainingRecord.aggregate([
+      {
+        $group: {
+          _id: '$description',
+          total: { $sum: 1 },
           success: {
-            $size: {
-              $filter: {
-                input: '$records',
-                as: 'r',
-                cond: { $gte: ['$$r.grade', 5] }
-              }
-            }
-          }
-        }
+            $sum: {
+              $cond: [{ $gte: ['$grade', 5] }, 1, 0],
+            },
+          },
+        },
       },
       {
         $project: {
-          description: 1,
+          description: '$_id',
           successRate: {
             $cond: [
               { $eq: ['$total', 0] },
               0,
-              { $multiply: [{ $divide: ['$success', '$total'] }, 100] }
-            ]
-          }
+              {
+                $round: [
+                  {
+                    $multiply: [
+                      { $divide: ['$success', '$total'] },
+                      100,
+                    ],
+                  },
+                  1,
+                ],
+              },
+            ],
+          },
+          _id: 0,
+        },
+      },
+    ]);
+
+    res.json(result);
+  } catch (err) {
+    console.error('successRateByTraining error:', err.message);
+    res.status(500).json({ error: 'Σφάλμα ποσοστών επιτυχίας' });
+  }
+};
+
+// 📌 Σύνολο Εκπαιδεύσεων ανά Περιγραφή
+exports.totalTrainingsByDescription = async (req, res) => {
+  try {
+    const result = await TrainingRecord.aggregate([
+      {
+        $group: {
+          _id: '$description',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          description: '$_id',
+          count: 1
         }
       }
     ]);
     res.json(result);
   } catch (err) {
-    res.status(500).json({ error: 'Σφάλμα ποσοστών επιτυχίας' });
+    console.error("totalTrainingsByDescription error:", err.message);
+    res.status(500).json({ error: 'Σφάλμα καταμέτρησης εκπαιδεύσεων ανά περιγραφή' });
   }
 };

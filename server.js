@@ -80,12 +80,16 @@ const authRoutes = require('./routes/authRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const trainingRoutes = require('./routes/trainingRoutes');
 const uploadRoutes = require('./routes/upload.routes');
+const statsRoutes = require('./routes/statsRoutes');
+
 
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/personnel', personnelRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/service', serviceRoutes);
 app.use('/api/training', trainingRoutes);
+app.use('/api/stats', statsRoutes);
+
 
 // Προστατευμένη διαδρομή
 app.use('/api/protected', authenticateJWT, (req, res) => {

@@ -10,7 +10,7 @@ exports.createTraining = async (req, res) => {
       location,
       from_date,
       to_date,
-      personnel
+      personnel, // array από ObjectId
     });
 
     await newTraining.save();
@@ -20,13 +20,31 @@ exports.createTraining = async (req, res) => {
   }
 };
 
-// ✅ Ανάκτηση όλων των εκπαιδευτικών αρχείων
+// ✅ Ανάκτηση όλων των εκπαιδευτικών αρχείων με populate του personnel
 exports.getTrainingRecords = async (req, res) => {
   try {
-    const trainingRecords = await TrainingRecord.find().populate("personnel");
+    const trainingRecords = await TrainingRecord.find().populate('personnel', 'firstName lastName rank');
     res.status(200).json(trainingRecords);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+// ✅ Ανάκτηση για ημερολόγιο (με ορθό τύπο ημερομηνίας)
+exports.getAllTrainingsForCalendar = async (req, res) => {
+  try {
+    const records = await TrainingRecord.find();
+
+    const events = records.map(record => ({
+      id: record._id.toString(),
+      title: record.description,
+      start: new Date(record.from_date),
+      end: new Date(record.to_date),
+    }));
+
+    res.status(200).json(events);
+  } catch (err) {
+    res.status(500).json({ message: "Σφάλμα ανάκτησης εκπαιδεύσεων για ημερολόγιο" });
   }
 };
 
@@ -43,7 +61,7 @@ exports.updateTraining = async (req, res) => {
         personnel: req.body.personnel,
       },
       { new: true }
-    );
+    ).populate('personnel', 'firstName lastName rank');
 
     if (!updated) {
       return res.status(404).json({ message: "Δεν βρέθηκε εκπαίδευση" });
