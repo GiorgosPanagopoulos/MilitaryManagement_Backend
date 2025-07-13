@@ -52,7 +52,7 @@ exports.personnelByRank = async (req, res) => {
   }
 };
 
-// 📊 Συμμετοχές & Μ.Ο. βαθμολογίας εκπαίδευσης
+// 📊 Συμμετοχές & Μ.Ο. Βαθμολογίας Εκπαίδευσης
 exports.trainingParticipation = async (req, res) => {
   try {
     const result = await TrainingRecord.aggregate([
@@ -60,7 +60,7 @@ exports.trainingParticipation = async (req, res) => {
         $group: {
           _id: '$description',
           participants: { $sum: 1 },
-          avgScore: { $avg: '$grade' },
+          avgScore: { $avg: '$success_rate' },
         },
       },
       {
@@ -80,7 +80,7 @@ exports.trainingParticipation = async (req, res) => {
   }
 };
 
-// 📈 Εκπαιδεύσεις ανά Μονάδα (μόνο αν υπάρχει `service` στο personnel)
+// 📈 Εκπαιδεύσεις ανά Μονάδα
 exports.trainingsByUnit = async (req, res) => {
   try {
     const result = await Personnel.aggregate([
@@ -114,7 +114,7 @@ exports.trainingsByUnit = async (req, res) => {
   }
 };
 
-// 📈 Ποσοστά επιτυχίας ανά Εκπαίδευση
+// 📈 Ποσοστά Επιτυχίας ανά Εκπαίδευση
 exports.successRateByTraining = async (req, res) => {
   try {
     const result = await TrainingRecord.aggregate([
@@ -124,7 +124,7 @@ exports.successRateByTraining = async (req, res) => {
           total: { $sum: 1 },
           success: {
             $sum: {
-              $cond: [{ $gte: ['$grade', 5] }, 1, 0],
+              $cond: [{ $gte: ['$success_rate', 50] }, 1, 0],
             },
           },
         },
