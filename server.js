@@ -11,7 +11,7 @@ const swaggerUi = require('swagger-ui-express');
 // Φορτώνουμε .env μεταβλητές
 dotenv.config();
 
-// Δημιουργία logger ΠΡΙΝ χρησιμοποιηθεί
+// Δημιουργία logger
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(
@@ -81,7 +81,7 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const trainingRoutes = require('./routes/trainingRoutes');
 const uploadRoutes = require('./routes/upload.routes');
 const statsRoutes = require('./routes/statsRoutes');
-
+const userRoutes = require('./routes/userRoutes'); 
 
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/personnel', personnelRoutes);
@@ -89,9 +89,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/service', serviceRoutes);
 app.use('/api/training', trainingRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/users', userRoutes); 
 
-
-// Προστατευμένη διαδρομή
+// Προστατευμένη διαδρομή (δοκιμαστική)
 app.use('/api/protected', authenticateJWT, (req, res) => {
   res.send('This is a protected route');
 });
