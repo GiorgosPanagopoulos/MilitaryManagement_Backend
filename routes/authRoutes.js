@@ -52,7 +52,11 @@ router.post('/login', async (req, res) => {
     { expiresIn: '1h' }
   );
 
-  res.json({ token, role: user.role });
+  res.json({
+    token,
+    role: user.role,
+    email: user.email, // ✅ αυτό προστέθηκε
+  });
 });
 
 module.exports = router;
