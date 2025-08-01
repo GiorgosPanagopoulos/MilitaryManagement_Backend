@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "62562611-fd5a-4058-8d90-4c97a037aa99",
+		"name": "MilMan API",
+		"description": "Postman collection for MilMan backend API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43540824"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.environment.set(\"token\", jsonData.token);",
+							"pm.test(\"Login successful\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin@milman.local\",\n    \"password\": \"12345678\"\n}"
+				},
+				"url": {
+					"raw": "localhost:5001/api/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Personnel",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Personnel fetched\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "localhost:5001/api/personnel",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"personnel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Training",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Training created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"Σχολείο Αξιωματικών\",\n  \"location\": \"ΚΕΠΑΛ\",\n  \"from_date\": \"2025-08-01\",\n  \"to_date\": \"2025-08-10\",\n  \"personnel\": [\"686a4ba81b65815904b79bf5\"],\n  \"success_rate\": 79\n}\n"
+				},
+				"url": {
+					"raw": "localhost:5001/api/training",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"training"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
