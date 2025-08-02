@@ -1,4 +1,5 @@
 // jest.config.js
+
 module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/tests/**/*.test.js'],
@@ -8,6 +9,9 @@ module.exports = {
   restoreMocks: true,
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  testTimeout: 20000,
+  detectOpenHandles: true, //
+  setupFiles: ['dotenv/config'],
   collectCoverageFrom: [
     'controllers/**/*.js',
     'routes/**/*.js',
@@ -17,3 +21,4 @@ module.exports = {
     '!**/tests/**'
   ]
 };
+
