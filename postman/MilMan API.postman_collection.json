@@ -1,140 +1,638 @@
 {
 	"info": {
-		"_postman_id": "62562611-fd5a-4058-8d90-4c97a037aa99",
-		"name": "MilMan API",
-		"description": "Postman collection for MilMan backend API",
+		"_postman_id": "73a3473c-b89e-467a-ab4b-a1e842c28cb8",
+		"name": "MilMan API Extended (with Auth)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "43540824"
 	},
 	"item": [
 		{
-			"name": "Login",
-			"event": [
+			"name": "Auth",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"const jsonData = pm.response.json();",
-							"pm.environment.set(\"token\", jsonData.token);",
-							"pm.test(\"Login successful\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"admin@milman.local\",\n    \"password\": \"12345678\"\n}"
-				},
-				"url": {
-					"raw": "localhost:5001/api/auth/login",
-					"host": [
-						"localhost"
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.environment.set(\"token\", jsonData.token);",
+									"console.log(\"Token updated:\", jsonData.token);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
 					],
-					"port": "5001",
-					"path": [
-						"api",
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Personnel",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Personnel fetched\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{token}}"
-					}
-				],
-				"url": {
-					"raw": "localhost:5001/api/personnel",
-					"host": [
-						"localhost"
-					],
-					"port": "5001",
-					"path": [
-						"api",
-						"personnel"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Training",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Training created\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@milman.local\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
 					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"description\": \"Σχολείο Αξιωματικών\",\n  \"location\": \"ΚΕΠΑΛ\",\n  \"from_date\": \"2025-08-01\",\n  \"to_date\": \"2025-08-10\",\n  \"personnel\": [\"686a4ba81b65815904b79bf5\"],\n  \"success_rate\": 79\n}\n"
-				},
-				"url": {
-					"raw": "localhost:5001/api/training",
-					"host": [
-						"localhost"
-					],
-					"port": "5001",
-					"path": [
-						"api",
-						"training"
-					]
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Register Admin",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin2@milman.local\",\n  \"password\": \"123456\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register-admin",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register-admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user10@milman.local\",\n  \"password\": \"123456\",\n  \"role\": \"user\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/688fa1a95c48d70a7422aec5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"688fa1a95c48d70a7422aec5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/688fa1a95c48d70a7422aec5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"688fa1a95c48d70a7422aec5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Personnel",
+			"item": [
+				{
+					"name": "Get Personnel",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/personnel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"personnel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Personnel",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Νίκος\",\n  \"lastName\": \"Παπαδόπουλος\",\n  \"rank\": \"Ανθυποπλοίαρχος\",\n  \"serviceNumber\": \"Υ-1001\",\n  \"phone\": \"6987654321\",\n  \"email\": \"nikos@milman.local\",\n  \"unit\": \"ΚΕΠΑΛ\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/personnel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"personnel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Personnel by ID",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/personnel/685d90e97f4698655be51c3e",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"personnel",
+								"685d90e97f4698655be51c3e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Personnel",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/personnel/685d90e97f4698655be51c3e",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"personnel",
+								"685d90e97f4698655be51c3e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Personnel",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/personnel/688fa6865c48d70a7422aede",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"personnel",
+								"688fa6865c48d70a7422aede"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload File for Personnel",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "postman-cloud:///1f07097e-0a92-4740-8ddc-1bb96b20de0d"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/uploads/personnel/685d90e97f4698655be51c3e",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"uploads",
+								"personnel",
+								"685d90e97f4698655be51c3e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trainings",
+			"item": [
+				{
+					"name": "Create Training",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Βολές με φορητό οπλισμό\",\n  \"location\": \"Σχολή Ναυτικών Δοκίμων\",\n  \"from_date\": \"2025-07-20\",\n  \"to_date\": \"2025-07-23\",\n  \"personnel\": [\"685d90e97f4698655be51c3e\"],\n  \"success_rate\": 92\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/training",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"training"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trainings",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/training",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"training"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Training",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/training/688fb0865c48d70a7422aef3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"training",
+								"688fb0865c48d70a7422aef3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Training",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/training/688fb0865c48d70a7422aef3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"training",
+								"688fb0865c48d70a7422aef3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stats",
+			"item": [
+				{
+					"name": "Personnel by Unit",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stats/personnel-by-unit",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stats",
+								"personnel-by-unit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Personnel by Rank",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/stats/personnel-by-rank",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stats",
+								"personnel-by-rank"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Training Participation",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/stats/training-participation",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stats",
+								"training-participation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Total Trainings by Description",
+					"request": {
+						"auth": {
+							"type": "inherit"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/stats/success-rate-by-training",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stats",
+								"success-rate-by-training"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
-	]
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	}
 }
