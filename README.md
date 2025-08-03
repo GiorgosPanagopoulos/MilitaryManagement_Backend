@@ -4,6 +4,8 @@
 [![Express](https://img.shields.io/badge/Express-Framework-blue.svg)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green.svg)](https://www.mongodb.com/)
 [![Build](https://img.shields.io/badge/Build-Passing-success.svg)]()
+[![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)]()
+[![Last Commit](https://img.shields.io/github/last-commit/GiorgosPanagopoulos/MilitaryManagement_Backend.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Backend REST API για διαχείριση στρατιωτικού προσωπικού, εκπαιδεύσεων, χρηστών και στατιστικών του Πολεμικού Ναυτικού.
