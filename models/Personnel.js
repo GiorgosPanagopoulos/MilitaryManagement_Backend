@@ -1,4 +1,3 @@
-// models/Personnel.js
 const mongoose = require('mongoose');
 
 const PersonnelSchema = new mongoose.Schema({
