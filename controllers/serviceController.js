@@ -1,4 +1,3 @@
-// controllers/serviceController.js
 const Service = require('../models/Service');
 const Personnel = require('../models/Personnel');
 

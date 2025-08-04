@@ -1,4 +1,3 @@
-// models/TrainingRecord.js
 const mongoose = require('mongoose');
 
 const TrainingRecordSchema = new mongoose.Schema({

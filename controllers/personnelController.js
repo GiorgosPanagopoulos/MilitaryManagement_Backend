@@ -1,4 +1,3 @@
-// controllers/personnelController.js
 const Personnel = require('../models/Personnel');
 
 // ✅ Ανάκτηση όλων των στρατιωτικών
