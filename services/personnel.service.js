@@ -1,4 +1,6 @@
-const Personnel = require('../models/Personnel');
+//const Personnel = require('../models/Personnel');//
+const { personnelRepository } = require('../repositories');
+personnelRepository.findAll();
 
 exports.findAll = async () => {
   return await Personnel.find().populate('service').populate('trainings');

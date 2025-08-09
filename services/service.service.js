@@ -1,4 +1,5 @@
-const Service = require('../models/Service');
+//const Service = require('../models/Service');//
+const { serviceRepository } = require('../repositories');
 
 exports.findAll = async () => {
   return await Service.find();

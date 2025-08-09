@@ -1,4 +1,5 @@
-const TrainingRecord = require('../models/TrainingRecord');
+//const TrainingRecord = require('../models/TrainingRecord');//
+const { trainingRepository } = require('../repositories');
 
 exports.findAll = async () => {
   return await TrainingRecord.find().populate('personnel', 'firstName lastName rank');

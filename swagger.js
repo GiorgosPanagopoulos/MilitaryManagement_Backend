@@ -1,6 +1,8 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const path = require('path');
 
+// Ρυθμίσεις Swagger
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -23,7 +25,7 @@ const options = {
           bearerFormat: 'JWT',
         },
       },
-      schemas: {}, // ✅ Υποχρεωτικό block για αποφυγή error (ακόμη κι αν γεμίζει από τα JSDoc)
+      schemas: {},
     },
     security: [
       {
@@ -31,11 +33,17 @@ const options = {
       },
     ],
   },
-  apis: ['./routes/*.js', './models/*.js', './dtos/*.js'], // ✅ Συμπεριλαμβάνει και dtos
+  // Συμπεριλαμβάνει όλα τα routes, models, dtos
+  apis: [
+    path.join(__dirname, './routes/*.js'),
+    path.join(__dirname, './models/*.js'),
+    path.join(__dirname, './dtos/*.js'),
+  ],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
 module.exports = (app) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  console.log('📄 Swagger docs διαθέσιμα στο: http://localhost:5001/api-docs');
 };
